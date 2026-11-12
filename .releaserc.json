@@ -1,5 +1,6 @@
 {
   "branches": ["main"],
+  "repositoryUrl": "git@github.com:TXC/node-red-vite-plugin.git",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
