@@ -9,7 +9,7 @@ export default defineConfig([
     ignores: ["**/*.d.ts", "**/coverage", "**/dist", "**/build", "node-red.settings*.ts", "test-types.ts"],
   },
   {
-    files: ['src/**/*.{js,ts}'],
+    files: ['packages/*/src/**/*.{js,ts}'],
     extends: [js.configs.recommended, tseslint.configs.recommended],
     ignores: ['node_modules', '/dist', '/rollup.config.editor.js', '/utils'],
     languageOptions: {
@@ -18,6 +18,11 @@ export default defineConfig([
         ...globals.jest,
       },
     },
+  },
+  {
+    // Tests call plugin hooks directly with partial fakes of Vite's context.
+    files: ['packages/*/src/**/*.test.ts'],
+    rules: { '@typescript-eslint/no-explicit-any': 'off' },
   },
   eslintConfigPrettier,
 ]);
