@@ -6,8 +6,16 @@ import { nodeRedBuild } from "./index.ts";
 
 let dir: string;
 
-const writePackageJson = (pkg: object) =>
-  fs.writeFileSync(path.join(dir, "package.json"), JSON.stringify(pkg));
+const writePackageJson = (pkg: object, file = "package.json") => {
+  fs.mkdirSync(path.dirname(path.join(dir, file)), { recursive: true });
+  fs.writeFileSync(path.join(dir, file), JSON.stringify(pkg));
+};
+
+const environmentNames = (plugins: any[]) =>
+  Object.keys(
+    plugins.find((p) => p.name === "build-node-environments").config()
+      .environments,
+  );
 
 const pluginNames = (generateTypes: boolean) =>
   (nodeRedBuild({ generateTypes }) as any[]).map((p) => p.name);
@@ -26,10 +34,26 @@ describe("nodeRedBuild", () => {
   it("reads node types from the project's package.json", () => {
     writePackageJson({ "node-red": { nodes: { "my-node": "./x.js" } } });
     const plugins = nodeRedBuild({ generateTypes: false }) as any[];
-    const envs = plugins
-      .find((p) => p.name === "build-node-environments")
-      .config().environments;
-    expect(Object.keys(envs)).toEqual(["my_node_editor", "my_node_runtime"]);
+    expect(environmentNames(plugins)).toEqual([
+      "my_node_editor",
+      "my_node_runtime",
+    ]);
+  });
+
+  it.each([
+    ["relative to the working directory", "config/package.json"],
+    ["absolute", "<dir>/config/package.json"],
+  ])("reads the package.json given as a path, %s", (_case, file) => {
+    writePackageJson(
+      { "node-red": { nodes: { a: "" } } },
+      "config/package.json",
+    );
+    const packageJson = file.replace("<dir>", dir);
+    const plugins = nodeRedBuild({ generateTypes: false, packageJson });
+    expect(environmentNames(plugins as any[])).toEqual([
+      "a_editor",
+      "a_runtime",
+    ]);
   });
 
   it.each([
