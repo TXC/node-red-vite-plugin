@@ -1,13 +1,22 @@
 name: Publish Package
 
+# semantic-release decides per package whether anything is released,
+# and tags each release as `<package>-v<version>`.
 on:
   push:
-    tags:
-      - '.*@v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - main
+
+# One release at a time; a queued run picks up the previous run's tags.
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 permissions:
-  contents: read
-  id-token: write
+  contents: write # release commits and tags
+  issues: write # comments on released issues
+  pull-requests: write # comments on released pull requests
+  id-token: write # npm provenance
 
 jobs:
   test:
@@ -44,8 +53,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Only needed until npm trusted publishing is set up for the package.
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # semantic-release tags the commit it releases; no tag means no release.
-      - name: Check for a new release
-        id: release
-        run: echo "tag=$(git tag --points-at HEAD 'v*')" >> "$GITHUB_OUTPUT"

@@ -1,18 +1,31 @@
-import { defineConfig } from 'vite';
-import { nodeRedBuild } from './vite/index.ts';
+import { defineConfig } from "vite";
+import dts from "vite-plugin-dts";
+import fs from "node:fs";
 
-export default defineConfig(opts => ({
-  clearScreen: false,
-  // Environments inherit this;
-  // set explicitly since server builds default to off.
+// Shared library build for every package in `packages/*`. Run from the
+// package folder (`vite build --config ../../vite.config.ts`), so the
+// paths below and package.json are that package's.
+const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+
+// Dependencies stay imports; only the package's own code is bundled.
+const deps = Object.keys({ ...pkg.dependencies, ...pkg.peerDependencies });
+const external = [/^node:/, ...deps.map((d) => new RegExp(`^${d}(/|$)`))];
+
+export default defineConfig({
   build: {
-    emptyOutDir: false,
-    copyPublicDir: false,
-    // minify: opts.mode === 'production',
-    minify: opts.mode !== 'development',
-    sourcemap: opts.mode === 'debug',
+    lib: {
+      entry: "src/index.ts",
+      formats: ["es"],
+      fileName: "index",
+    },
+    minify: false,
+    rolldownOptions: { external },
   },
   plugins: [
-    nodeRedBuild({ generateTypes: false }),
+    dts({
+      bundleTypes: true,
+      include: ["src"],
+      exclude: ["src/**/*.test.ts"],
+    }),
   ],
-}));
+});

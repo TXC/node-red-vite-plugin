@@ -112,7 +112,7 @@ stats.json
 node-red-3
 test-types.ts
 pnpm-workspace.yaml
-
+pnpm-lock.yaml
 
 #########
 
@@ -143,3 +143,6 @@ pnpm-debug.log*
 !.vscode/settings.json
 
 .kiro
+
+# semantic-release tarballs
+pack/
