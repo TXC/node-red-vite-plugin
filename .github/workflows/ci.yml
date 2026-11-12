@@ -2,6 +2,11 @@ name: CI
 
 on:
   pull_request:
+    paths:
+      - "**/*.[jt]sx?"  # .js, .ts, .jsx, .tsx
+      - "**/*.[ecm]js"  # .ejs, .cjs, .mjs
+      - "**/*.json"
+      - "**/*.ya?ml"    # .yml, .yaml
   # Pushes to main run CI through publish.yml, before releasing.
   workflow_call:
 
