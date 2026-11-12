@@ -38,7 +38,6 @@
     "eslint-plugin-prettier": "^5.5.6",
     "glob": "^13.0.6",
     "globals": "^17.8.0",
-    "node-red-builder": "*",
     "prettier": "^3.9.6",
     "semantic-release": "^25.0.9",
     "semantic-release-monorepo": "^8.0.0",
