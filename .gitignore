@@ -111,8 +111,6 @@ stats.html
 stats.json
 node-red-3
 test-types.ts
-pnpm-workspace.yaml
-pnpm-lock.yaml
 
 #########
 
