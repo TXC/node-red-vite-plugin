@@ -7,13 +7,14 @@ import dts from "vite-plugin-dts";
 
 interface NodeRedBuilder {
   generateTypes: boolean;
+  // Path to the package.json listing the nodes, relative to the working
+  // directory. Defaults to the one in the working directory.
+  packageJson?: string;
 }
 
 // Node types come from the `node-red.nodes` map in the project's package.json.
-// shortcut: reads package.json from the working directory, not Vite's `root`;
-// take the root as an option if a project ever builds from elsewhere.
-const readNodeTypes = (): string[] => {
-  const file = path.resolve("package.json");
+const readNodeTypes = (packageJson = "package.json"): string[] => {
+  const file = path.resolve(packageJson);
   const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
   const nodeTypes = Object.keys(pkg["node-red"]?.nodes ?? {});
   if (nodeTypes.length === 0) {
@@ -36,7 +37,7 @@ const typesPlugin = (nodeType: string): Plugin => ({
 });
 
 export const nodeRedBuild = (conf: NodeRedBuilder): PluginOption => {
-  const nodeTypes = readNodeTypes();
+  const nodeTypes = readNodeTypes(conf.packageJson);
   return [
     ...(conf.generateTypes ? nodeTypes.map(typesPlugin) : []),
     nodeRedEditorHtml(),

@@ -82,14 +82,16 @@ dist/nodes/my-node/
 
 ## Options
 
-| Option          | Type      | Description                                                                                                             |
-| --------------- | --------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `generateTypes` | `boolean` | Also write type declarations for each node next to its runtime file. Needs a `tsconfig.types.json` in the project root. |
+| Option          | Type      | Description                                                                                                              |
+| --------------- | --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `generateTypes` | `boolean` | Also write type declarations for each node next to its runtime file. Needs a `tsconfig.types.json` in the project root.  |
+| `packageJson`   | `string`  | Path to the `package.json` that lists the nodes, relative to the working directory or absolute. Default: `package.json`. |
 
 ## Good to know
 
-- Run Vite from the project root. The plugin reads the node list from the
-  `package.json` in the current working directory.
+- Run Vite from the project root. The source and output paths
+  (`src/nodes/…`, `dist/nodes/…`) are relative to the working directory,
+  even when `packageJson` points elsewhere.
 - The build stops with an error if `package.json` lists no nodes under
   `node-red.nodes`.
 - Only the node builds run. Vite's default `client` and `ssr` builds are
