@@ -22,7 +22,7 @@ A single `vite build` builds every node listed in your `package.json`.
 ## Installation
 
 ```sh
-npm install --save-dev vite vite-plugin-node-red-node
+npm install --save-dev vite @txcswe/vite-plugin-node-red-node
 ```
 
 ## Project layout
@@ -60,7 +60,7 @@ node types the plugin builds:
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import { nodeRedBuild } from "vite-plugin-node-red-node";
+import { nodeRedBuild } from "@txcswe/vite-plugin-node-red-node";
 
 export default defineConfig({
   build: {
