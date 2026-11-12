@@ -1,5 +1,5 @@
 {
-  "name": "node-red-vite-plugin-mono",
+  "name": "@txcswe/node-red-vite-plugin-mono",
   "type": "module",
   "private": true,
   "license": "MIT",
